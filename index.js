@@ -1,27 +1,18 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 const db = require('./models');
-app.use(express.json());
-app.use(express.urlencoded({ 
-    extended: false 
-}));
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 db.sequelize.sync()
     .then((result) => {
-        app.listen(PORT, () => {
-            console.log(`Server started`);
-        })
+        app.listen(3000, () => {console.log('Server Started')});
     })
-    .catch((err) => {
-        console.log(err);
-    })
+    .catch((err) => {console.log(err)});
 
-app.post('/komik', async (req, res) => {
+app.post("/komik", async (req, res) => {
     const data = req.body;
     try {
         const komik = await db.Komik.create(data);
@@ -31,48 +22,44 @@ app.post('/komik', async (req, res) => {
     }
 });
 
-app.get('/komik', async (req, res) => {
+app.get("/komik", async (req, res) => {
     try {
         const komik = await db.Komik.findAll();
         res.send(komik);
     } catch (err) {
         res.send(err);
-    }
+    } 
 });
 
-app.put('/komik/:id', async (req, res) => {
+app.put("/komik/:id", async (req, res) => {
     const id = req.params.id;
     const data = req.body;
-
     try {
         const komik = await db.Komik.findByPk(id);
         if (!komik) {
-            return res.status(404).send({ 
-                message: 'Komik Tidak Ditemukan'
-             });
+            return res.status(404).send({message: 'Komik tidak ditemukan' });
         }
-
         await komik.update(data);
-        res.send({ message: 'Komik berhasil diperbarui'});
-        
+        res.send({message: 'Komik berhasil diupdate', komik});
     } catch (err) {
         res.status(500).send(err);
     }
 });
 
-app.delete('/komik/:id', async (req, res) => {
+app.delete("/komik/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const komik = await db.Komik.findByPk(id);
         if (!komik) {
-            return res.status(404).send({ 
-                message: 'Komik Tidak Ditemukan'
-             });
+            return res.status(404).send({message: 'Komik tidak ditemukan' });
         }
-
         await komik.destroy();
-        res.send({ message: 'Komik berhasil dihapus'});
+        res.send({message: 'Komik berhasil dihapus'});
     } catch (err) {
         res.status(500).send(err);
-    }
+    }   
+})
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
