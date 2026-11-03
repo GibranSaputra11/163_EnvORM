@@ -3,3 +3,6 @@
 
 # GET
 <img width="1600" height="999" alt="image" src="https://github.com/user-attachments/assets/061707f4-f521-46f1-899b-9a29d5179bb7" />
+
+# DELETE
+<img width="1917" height="1198" alt="image" src="https://github.com/user-attachments/assets/033506c0-bb7f-4126-9681-ab1535d04ae9" />
